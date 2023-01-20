@@ -7,6 +7,14 @@ import { chain, configureChains, createClient, useSigner, WagmiConfig } from "wa
 import { wallabyChain } from "../constants/WallabyChain"
 import { Layout } from "../components/Layout"
 import Link from "next/link"
+import theme from "../src/theme"
+import createEmotionCache from "../src/createEmotionCache"
+import PropTypes from "prop-types"
+import { ThemeProvider } from "@mui/material/styles"
+import CssBaseline from "@mui/material/CssBaseline"
+import { CacheProvider } from "@emotion/react"
+
+const clientSideEmotionCache = createEmotionCache()
 
 const { chains, provider } = configureChains([wallabyChain], [publicProvider()])
 
@@ -21,16 +29,29 @@ const wagmiClient = createClient({
     provider,
 })
 
-function MyApp({ Component, pageProps }) {
+function MyApp(props) {
+    const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
+
     return (
         <WagmiConfig client={wagmiClient}>
             <RainbowKitProvider chains={chains} theme={lightTheme()}>
-                <Layout>
-                    <Component {...pageProps} />
-                </Layout>
+                <ThemeProvider theme={theme}>
+                    {/* CssBaseline kickstart an elegant, 
+                  consistent, and simple baseline to
+                  build upon. */}
+                    <CssBaseline />
+                    <Layout>
+                        <Component {...pageProps} />
+                    </Layout>{" "}
+                </ThemeProvider>
             </RainbowKitProvider>
         </WagmiConfig>
     )
+}
+MyApp.propTypes = {
+    Component: PropTypes.elementType.isRequired,
+    emotionCache: PropTypes.object,
+    pageProps: PropTypes.object.isRequired,
 }
 
 export default MyApp
