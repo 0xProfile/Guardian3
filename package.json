@@ -16,9 +16,11 @@
     "@rainbow-me/rainbowkit": "^0.7.4",
     "ethers": "^5.7.2",
     "lodash.merge": "^4.6.2",
+    "material-ui-dropzone": "^3.5.0",
     "next": "13.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-mui-dropzone": "^4.0.6",
     "wagmi": "^0.8.5",
     "web3.storage": "^4.4.0"
   },

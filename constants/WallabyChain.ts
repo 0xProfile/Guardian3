@@ -17,3 +17,21 @@ export const wallabyChain: Chain = {
     },
     testnet: true,
 }
+
+export const hyperspaceChain: Chain = {
+    id: 3141,
+    name: "Hyperspace testnet",
+    network: "Hyperspace testnet",
+    nativeCurrency: {
+        name: "Hyperspace Chain FIL",
+        symbol: "TFIL",
+        decimals: 18,
+    },
+    rpcUrls: {
+        default: "https://api.hyperspace.node.glif.io/rpc/v0",
+    },
+    blockExplorers: {
+        default: { name: "explorer", url: "https://explorer.glif.io/?network=hyperspace" },
+    },
+    testnet: true,
+}

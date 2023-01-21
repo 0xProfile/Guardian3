@@ -7,9 +7,8 @@ import { Button } from "@mui/material"
 export default function Home() {
     const router = useRouter()
 
-    const handleClick = (e) => {
-        e.preventDefault()
-        router.push("/contributor")
+    const handleClick = (path) => {
+        router.push(path)
     }
 
     return (
@@ -22,10 +21,10 @@ export default function Home() {
             <div className={styles.circle}>
                 <div className={styles.circletitle}>title</div>
                 <div className={styles.circlesubtitle}>Description</div>
-                <Button variant="contained" href="#contained-buttons" onClick={handleClick}>
+                <Button variant="contained" href="#contained-buttons" onClick={() => handleClick("contributor")}>
                     This is contributor link
                 </Button>
-                <Button variant="contained" href="#contained-buttons" onClick={handleClick}>
+                <Button variant="contained" href="#contained-buttons" onClick={() => handleClick("reporter")}>
                     This is reporter link
                 </Button>
             </div>

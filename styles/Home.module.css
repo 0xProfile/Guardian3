@@ -1,6 +1,12 @@
 .head{
     text-align: center;
-    position: relative;
+    position: sticky;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: .5rem;
+    margin-right: .5rem;
 }
 
 .headerwrap {
