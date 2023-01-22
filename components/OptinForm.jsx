@@ -90,16 +90,15 @@ export default function SignInSide() {
                                 label="org"
                                 defaultValue={0}
                             >
-                                <MenuItem value={0}>None</MenuItem>
+                                <MenuItem value={0}>I don't have org</MenuItem>
                                 <MenuItem value={1}>The New York Times</MenuItem>
                                 <MenuItem value={2}>CoinDesk</MenuItem>
                                 <MenuItem value={3}>ChainFeeds</MenuItem>
                             </Select>
                         </FormControl>
                         <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-                            Sign In
+                            Opt in
                         </Button>
-                        <ConnectButton label="Already opt-in? Connect Wallet Now!"></ConnectButton>
                     </Box>
                 </Box>
             </Grid>

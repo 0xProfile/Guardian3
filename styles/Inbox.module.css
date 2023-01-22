@@ -1,0 +1,9 @@
+.wrapper {
+    width: 320px;
+    height: 568px;
+    background: #fff;
+    margin: auto;
+    position: relative;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 8);
+}
+
