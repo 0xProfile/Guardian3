@@ -1,10 +1,11 @@
 import * as React from "react"
-import OptinForm from "../../components/OptinForm"
-import OptinCard from "../../components/OptinCard"
-import InboxBox from "../../components/Inbox"
+import dynamic from "next/dynamic"
+const OptinForm = dynamic(() => import("../../components/OptinForm"), { ssr: false })
+const OptinCard = dynamic(() => import("../../components/OptinCard"), { ssr: false })
+const Inbox = dynamic(() => import("../../components/Inbox"), { ssr: false })
+const ConnectButton = dynamic(() => import("@rainbow-me/rainbowkit"), { ssr: false })
 
 import { useAccount, useConnect } from "wagmi"
-import { ConnectButton } from "@rainbow-me/rainbowkit"
 
 export default function Reporter() {
     const { connector: activeConnector, isConnected } = useAccount()
@@ -15,7 +16,7 @@ export default function Reporter() {
         isOptin ? (
             <div>
                 <OptinCard></OptinCard>
-                <InboxBox></InboxBox>
+                <Inbox></Inbox>
             </div>
         ) : (
             <OptinForm></OptinForm>

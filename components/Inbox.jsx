@@ -1,7 +1,6 @@
 import React from "react"
 import styles from "../styles/Inbox.module.css"
 import List from "@mui/material/List"
-import ListItem from "@mui/material/ListItem"
 import Divider from "@mui/material/Divider"
 import ListItemText from "@mui/material/ListItemText"
 import ListItemButton from "@mui/material/ListItemButton"
@@ -10,7 +9,7 @@ import ListItemAvatar from "@mui/material/ListItemAvatar"
 import Avatar from "@mui/material/Avatar"
 import Typography from "@mui/material/Typography"
 
-export default function InboxBox() {
+export default function Inbox() {
     return (
         <div className={styles.wrapper}>
             <div>
