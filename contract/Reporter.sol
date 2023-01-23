@@ -6,6 +6,7 @@ struct Reporter {
     string name;
     string email;
     string org;
+    string tokenId;
 }
 
 contract ReporterOperator {
@@ -16,9 +17,10 @@ contract ReporterOperator {
         address _address,
         string memory _name,
         string memory _email,
-        string memory _org
+        string memory _org,
+        string memory _id
     ) public {
-        Reporter memory curr = Reporter(_name, _email, _org);
+        Reporter memory curr = Reporter(_name, _email, _org, _id);
         reporterAccounts[_address] = curr;
         reporterAccountList.push(curr);
     }
