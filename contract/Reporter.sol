@@ -6,7 +6,7 @@ struct Reporter {
     string name;
     string email;
     string org;
-    string tokenId;
+    uint256 tokenId;
 }
 
 contract ReporterOperator {
@@ -18,7 +18,7 @@ contract ReporterOperator {
         string memory _name,
         string memory _email,
         string memory _org,
-        string memory _id
+        uint256 _id
     ) public {
         Reporter memory curr = Reporter(_name, _email, _org, _id);
         reporterAccounts[_address] = curr;
@@ -31,5 +31,20 @@ contract ReporterOperator {
 
     function getReporterAccounts() public view returns (Reporter[] memory) {
         return reporterAccountList;
+    }
+
+    function setReporterInfo(
+        address _address,
+        string memory _newName,
+        string memory _newEmail
+    ) public {
+        Reporter memory reporter = reporterAccounts[_address];
+        if (bytes(_newName).length != 0) {
+            reporter.name = _newName;
+        }
+        if (bytes(_newEmail).length != 0) {
+            reporter.email = _newEmail;
+        }
+        reporterAccounts[_address] = reporter;
     }
 }
