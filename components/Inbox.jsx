@@ -4,14 +4,11 @@ import List from "@mui/material/List"
 import Divider from "@mui/material/Divider"
 import ListItemText from "@mui/material/ListItemText"
 import ListItemButton from "@mui/material/ListItemButton"
-
-import ListItemAvatar from "@mui/material/ListItemAvatar"
-import Avatar from "@mui/material/Avatar"
-import Typography from "@mui/material/Typography"
+import lighthouse from '@lighthouse-web3/sdk';
 
 import { reportManageAddr } from '../constants'
 import reportMangeABI from '../constants/abis/reportManage.json'
-import { useAccount, useContractRead } from "wagmi"
+import { useAccount, useContractRead, useSigner } from "wagmi"
 
 export default function Inbox() {
 
@@ -28,77 +25,53 @@ export default function Inbox() {
         console.log(data)
     }, [data])
 
+    const { data: signer } = useSigner();
+
+    const sign_auth_message = async() =>{
+        const publicKey = (await signer.getAddress()).toLowerCase();
+        const messageRequested = (await lighthouse.getAuthMessage(publicKey)).data.message;
+        const signedMessage = await signer.signMessage(
+          messageRequested
+        );
+        return({publicKey: publicKey, signedMessage: signedMessage});
+    }
+
+    const handleDownload = async (reportId, filename) => {
+        const {publicKey, signedMessage} = await sign_auth_message();
+        const keyObject = await lighthouse.fetchEncryptionKey(
+            reportId,
+            publicKey,
+            signedMessage
+        );
+        const decrypted = await lighthouse.decryptFile(reportId, keyObject.data.key);
+        const url = URL.createObjectURL(decrypted);
+        // download file
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+    }
+
     return (
         <div className={styles.wrapper}>
             <div>
                 <h1>INBOX</h1>
             </div>
             <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
-                <ListItemButton alignItems="flex-start">
-                    <ListItemAvatar>
-                        <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-                    </ListItemAvatar>
-                    <ListItemText
-                        primary="Brunch this weekend?"
-                        secondary={
-                            <React.Fragment>
-                                <Typography
-                                    sx={{ display: "inline" }}
-                                    component="span"
-                                    variant="body2"
-                                    color="text.primary"
-                                >
-                                    Ali Connors
-                                </Typography>
-                                {" — I'll be in your neighborhood doing errands this…"}
-                            </React.Fragment>
-                        }
-                    />
-                </ListItemButton>
-                <Divider variant="inset" component="li" />
-                <ListItemButton alignItems="flex-start">
-                    <ListItemAvatar>
-                        <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
-                    </ListItemAvatar>
-                    <ListItemText
-                        primary="Summer BBQ"
-                        secondary={
-                            <React.Fragment>
-                                <Typography
-                                    sx={{ display: "inline" }}
-                                    component="span"
-                                    variant="body2"
-                                    color="text.primary"
-                                >
-                                    to Scott, Alex, Jennifer
-                                </Typography>
-                                {" — Wish I could come, but I'm out of town this…"}
-                            </React.Fragment>
-                        }
-                    />
-                </ListItemButton>
-                <Divider variant="inset" component="li" />
-                <ListItemButton alignItems="flex-start">
-                    <ListItemAvatar>
-                        <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg" />
-                    </ListItemAvatar>
-                    <ListItemText
-                        primary="Oui Oui"
-                        secondary={
-                            <React.Fragment>
-                                <Typography
-                                    sx={{ display: "inline" }}
-                                    component="span"
-                                    variant="body2"
-                                    color="text.primary"
-                                >
-                                    Sandra Adams
-                                </Typography>
-                                {" — Do you have Paris recommendations? Have you ever…"}
-                            </React.Fragment>
-                        }
-                    />
-                </ListItemButton>
+                    {
+                        data.map((it, index) => {
+                            return (
+                                <div key={index}>
+                                    <ListItemButton onClick={() => handleDownload(it[0], it[1])} alignItems="flex-start">
+                                        <ListItemText primary={it[1]}></ListItemText>
+                                    </ListItemButton>
+                                    <Divider variant="inset" component="li" />
+                                </div>
+                            )
+                        })
+                    }
             </List>
         </div>
     )
