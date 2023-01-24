@@ -11,13 +11,13 @@ export default function SelectFile({files, setFiles}) {
 
     const handleClickFile = (e) => {
         e.preventDefault();
-        setFiles(Array.from(e.target.files));   
+        setFiles(e);   
     }
 
     const handleDropFile = (e) => {
         e.preventDefault();
         e.stopPropagation();
-        setFiles(Array.from(e.dataTransfer.files));
+        setFiles(e);
     }
 
     return (

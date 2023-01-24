@@ -7,6 +7,7 @@ struct Reporter {
     string email;
     string org;
     uint256 tokenId;
+    string publicKey;
 }
 
 contract ReporterOperator {
@@ -18,9 +19,10 @@ contract ReporterOperator {
         string memory _name,
         string memory _email,
         string memory _org,
+        string memory _publicKey,
         uint256 _id
     ) public {
-        Reporter memory curr = Reporter(_name, _email, _org, _id);
+        Reporter memory curr = Reporter(_name, _email, _org, _id, _publicKey);
         reporterAccounts[_address] = curr;
         reporterAccountList.push(curr);
     }
@@ -31,6 +33,10 @@ contract ReporterOperator {
 
     function getReporterAccounts() public view returns (Reporter[] memory) {
         return reporterAccountList;
+    }
+
+    function isOptedIn(address _address) public view returns (bool) {
+        return bytes(reporterAccounts[_address].name).length != 0;
     }
 
     function setReporterInfo(

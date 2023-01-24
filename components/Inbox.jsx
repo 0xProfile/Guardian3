@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import styles from "../styles/Inbox.module.css"
 import List from "@mui/material/List"
 import Divider from "@mui/material/Divider"
@@ -9,7 +9,25 @@ import ListItemAvatar from "@mui/material/ListItemAvatar"
 import Avatar from "@mui/material/Avatar"
 import Typography from "@mui/material/Typography"
 
+import { reportManageAddr } from '../constants'
+import reportMangeABI from '../constants/abis/reportManage.json'
+import { useAccount, useContractRead } from "wagmi"
+
 export default function Inbox() {
+
+    const {address} = useAccount()
+
+    const { data } = useContractRead({
+        address: reportManageAddr,
+        abi: reportMangeABI,
+        functionName: "getRecToReport",
+        args: [address]
+    })
+
+    useEffect(() => {
+        console.log(data)
+    }, [data])
+
     return (
         <div className={styles.wrapper}>
             <div>

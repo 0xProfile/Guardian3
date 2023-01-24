@@ -6,7 +6,7 @@ import { Connect } from "./CustomButton";
 export const Header = ({}) => {
   return (
     <div className={styles.head}>
-      <header className={styles.headerwrap}>FCloud</header>
+      <header className={styles.headerwrap}>FC11loud</header>
       <Connect></Connect>
     </div>
   );

@@ -1,4 +1,4 @@
-import * as React from "react"
+import React, { useEffect } from "react"
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -11,21 +11,43 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
+import { usePrepareContractWrite, useAccount, useContractWrite, useSigner } from "wagmi";
+import { reporterAddr } from "../constants";
+import reporterABI from "../constants/abis/reporter.json"
 
 export default function SignInSide() {
-    const [org, setorg] = React.useState("")
+
+    const { address } = useAccount()
+    const [org, setOrg] = React.useState("")
+    const [email, setEmail] = React.useState("")
+    const [name, setName] = React.useState("")
+    const [publicKey, setPublicKey] = React.useState("")
+    const [id, setId] = React.useState(0)
+    const { data: signer } = useSigner();
+
+    useEffect(() => {
+        if (!signer) return
+        signer.getAddress().then((addr) => {
+            setPublicKey(addr)
+        })
+    }, [signer])
+
+    const {config} = usePrepareContractWrite({
+        address: reporterAddr,
+        abi: reporterABI,
+        functionName: "add",
+        args: [address, name, email, org, publicKey, id],
+    })
+
+    const { write: addReporter } = useContractWrite(config)
+
     const handleSubmit = (event) => {
         event.preventDefault()
-        const data = new FormData(event.currentTarget)
-        console.log({
-            email: data.get("email"),
-            password: data.get("password"),
-            org: org,
-        })
+        addReporter?.()
     }
 
     const handleChange = (event) => {
-        setorg(event.target.value)
+        setOrg(event.target.value)
     }
 
     return (
@@ -65,6 +87,7 @@ export default function SignInSide() {
                             name="email"
                             autoComplete="email"
                             autoFocus
+                            onChange={(e) => setEmail(e.target.value)}
                         />
                         <TextField
                             margin="normal"
@@ -75,6 +98,7 @@ export default function SignInSide() {
                             type="name"
                             id="name"
                             autoComplete="name"
+                            onChange={(e) => setName(e.target.value)}
                         />
                         <FormControl>
                             <InputLabel id="demo-simple-select-autowidth-label">org</InputLabel>
@@ -85,12 +109,11 @@ export default function SignInSide() {
                                 onChange={handleChange}
                                 autoWidth
                                 label="org"
-                                defaultValue={0}
                             >
-                                <MenuItem value={0}>I don't have org</MenuItem>
-                                <MenuItem value={1}>The New York Times</MenuItem>
-                                <MenuItem value={2}>CoinDesk</MenuItem>
-                                <MenuItem value={3}>ChainFeeds</MenuItem>
+                                <MenuItem value={"I don't have org"}>I don't have org</MenuItem>
+                                <MenuItem value={"The New York Times"}>The New York Times</MenuItem>
+                                <MenuItem value={"CoinDesk"}>CoinDesk</MenuItem>
+                                <MenuItem value={"ChainFeeds"}>ChainFeeds</MenuItem>
                             </Select>
                         </FormControl>
                         <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>

@@ -1,9 +1,13 @@
-import { Button, Grid, Step, StepLabel, Stepper, Typography, Card, CardContent } from "@mui/material";
+import { Button, Grid, Step, StepLabel, Stepper, Typography, Card, CardContent, CircularProgressWithLabel, CircularProgress } from "@mui/material";
 import { Box } from "@mui/system";
-import React from "react";
+import React, { useEffect } from "react";
 import SelectReport from "./selectReport";
 import SelectFile from "./selectFile";
 import SendReport from "./sendReport";
+import { useAccount, usePrepareContractWrite, useSigner,useContractWrite } from "wagmi";
+import lighthouse from '@lighthouse-web3/sdk';
+import { reportManageAddr } from '../../../constants';
+import reportMangeABI from '../../../constants/abis/reportManage.json'
 
 const steps = [
     "Select reporter",
@@ -13,7 +17,11 @@ const steps = [
 
 export default function index() {
     const [activeStep, setActiveStep] = React.useState(0);
-    
+    const [showProgress, setShowProgress] = React.useState(false);
+    const [progressValue, setProgressValue] = React.useState(0);
+
+    const [called, setCalled] = React.useState(false);
+
     const [files, setFiles] = React.useState([]);
     const [checked, setChecked] = React.useState([]);
     const [formData, setFormData] = React.useState({
@@ -21,6 +29,70 @@ export default function index() {
         duration: 1,
         encryption: "AES"
     });
+
+    const [cid, setCid] = React.useState("Default CID");
+    const [title, setTitle] = React.useState("Default Title");
+    const {address} = useAccount();
+
+    const { data: signer } = useSigner();
+
+    const encryptionSignature = async() =>{
+        const address = await signer.getAddress();
+        const messageRequested = (await lighthouse.getAuthMessage(address)).data.message;
+        const signedMessage = await signer.signMessage(messageRequested);
+        return({
+          signedMessage: signedMessage,
+          publicKey: address
+        });
+    }
+
+    const {config} = usePrepareContractWrite({
+        address: reportManageAddr,
+        abi: reportMangeABI,
+        functionName: "add",
+        args: [cid, title, address, checked]
+    })
+
+
+    const progressCallback = (progressData) => {
+        let percentageDone =
+          100 - (progressData?.total / progressData?.uploaded)?.toFixed(2);
+        setProgressValue(percentageDone);
+      };
+
+    const handleUpload = async (path) => {
+        path.preventDefault();
+    
+        let sig = await encryptionSignature();
+        setShowProgress(true);
+        const response = await lighthouse.uploadEncrypted(path,
+            sig.publicKey,
+            "8e488fce-749c-47f6-b02d-82aa2ceea7dd",
+            sig.signedMessage,
+            progressCallback
+          );
+        const cid = response.data.Hash;
+        setCid(cid);
+        setTitle(response.data.Name);
+
+        sig = await encryptionSignature();
+
+        const res = await lighthouse.shareFile(
+            sig.publicKey,
+            checked,
+            cid,
+            sig.signedMessage
+        );
+        setShowProgress(false);
+    }
+
+    const { write: addReport } = useContractWrite(config)
+    useEffect(() => {
+        if (cid !== "Default CID" && title !== "Default Title" && addReport && !called) {
+            addReport();
+            setCalled(true);
+        }
+    }, [cid, title, addReport])
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -32,6 +104,13 @@ export default function index() {
 
     return (
         <Grid container spacing={2} alignItems={"center"} justifyContent={"center"}>
+            {
+                showProgress && <CircularProgress sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                }} variant="determinate" value={progressValue} />
+            }
             <Grid item xs={10}>
                 <Stepper activeStep={activeStep}>
                     {
@@ -56,7 +135,9 @@ export default function index() {
                     <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', pt: 2 }}>
                         <Button disabled={activeStep === 0} onClick={handleBack}> Back </Button>
                         <Button variant="contained" onClick={
-                            activeStep === steps.length - 1 ? () => console.log("Submit") : handleNext
+                            activeStep === steps.length - 1 ? async () => {
+                                await handleUpload(files);
+                            } : handleNext
                         }> {activeStep === steps.length - 1 ? "Submit" : "Next"} </Button>
                     </Box>
                 </>
