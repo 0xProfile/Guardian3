@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import SelectReport from "./selectReport";
 import SelectFile from "./selectFile";
 import SendReport from "./sendReport";
-import { useAccount, usePrepareContractWrite, useSigner,useContractWrite } from "wagmi";
+import { useAccount, usePrepareContractWrite, useSigner,useContractWrite, useContractEvent } from "wagmi";
 import lighthouse from '@lighthouse-web3/sdk';
 import { reportManageAddr } from '../../../constants';
 import reportMangeABI from '../../../constants/abis/reportManage.json'

@@ -11,12 +11,15 @@ contract ReportManagement {
     mapping(address => int[]) recToReport;
     Report[] reportList;
 
+    event NewReport(string cid, string title, address owner);
+
     function add(string memory _cid, string memory _title, address _owner, address[] memory recs) public {
         Report memory curr = Report(_cid, _title, _owner);
         for (uint256 i = 0; i < recs.length; i++) {
             recToReport[recs[i]].push(int(reportList.length));
         }
         reportList.push(curr);
+        emit NewReport(_cid, _title, _owner);
     }
 
     function getRecToReport(address _address) public view returns (Report[] memory) {
