@@ -1,4 +1,7 @@
 # Guardian3
+
+[ETHGlobal Hackthon Showcase](https://ethglobal.com/showcase/guardian3-dd1u8)
+
 Guardian3 is a secure and anonymous communication platform for sources (whistleblowers) to share information with journalists. Inspired by The Guardian's SecureDrop service, Guardian3 uses FVM and blockchain technology to provide a user-friendly solution for whistleblowers to share important information with journalists in a secure and confidential manner.
 
 Guardian3 is dedicated to making the world a better place by enabling whistleblowers to share important information with journalists in a secure and anonymous manner.
