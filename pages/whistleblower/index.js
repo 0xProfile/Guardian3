@@ -12,10 +12,12 @@ export default function contributor() {
     return (
         <Grid container spacing={2} justifyContent="space-around">
             <Grid item xs={5}>
-                <CardActionArea onClick={() => handlePath("/contributor/report")}>
-                    <Card style={{
-                        height: "50vh"
-                    }}>
+                <CardActionArea onClick={() => handlePath("/whistleblower/report")}>
+                    <Card
+                        style={{
+                            height: "50vh",
+                        }}
+                    >
                         <CardContent>
                             <Typography variant="h5" component="div">
                                 Send a report
@@ -29,10 +31,12 @@ export default function contributor() {
             </Grid>
 
             <Grid item xs={5}>
-            <CardActionArea onClick={(e) => console.log(e)}>
-                    <Card style={{
-                        height: "50vh"
-                    }}>
+                <CardActionArea onClick={(e) => console.log(e)}>
+                    <Card
+                        style={{
+                            height: "50vh",
+                        }}
+                    >
                         <CardContent>
                             <Typography variant="h5" component="div">
                                 View Connections

@@ -21,11 +21,19 @@ export default function Home() {
             <div className={styles.circle}>
                 <div className={styles.circletitle}>title</div>
                 <div className={styles.circlesubtitle}>Description</div>
-                <Button variant="contained" href="#contained-buttons" onClick={() => handleClick("contributor")}>
-                    This is contributor link
+                <Button
+                    variant="contained"
+                    href="#contained-buttons"
+                    onClick={() => handleClick("whistleblower")}
+                >
+                    This is whistleblower link
                 </Button>
-                <Button variant="contained" href="#contained-buttons" onClick={() => handleClick("reporter")}>
-                    This is reporter link
+                <Button
+                    variant="contained"
+                    href="#contained-buttons"
+                    onClick={() => handleClick("journalist")}
+                >
+                    This is journalist link
                 </Button>
             </div>
         </div>
