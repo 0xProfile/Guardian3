@@ -1,6 +1,6 @@
 const currency = "TFIL"
-const reporterAddr = "0x5747d5c62b7caa0025Fdf8DF9BFee8ef6dC62E8D"
-const reportManageAddr = "0xFD1AE7347dEc953B341Fac945d9834E55B68b507"
+const reporterAddr = "0xD6EC125112308A420856E70cBeB667473A4a2A26"
+const reportManageAddr = "0x8020F8aFcd3893cAC9fF8dDCC7f7F49fe21bA283"
 module.exports = {
     currency,
     reportManageAddr,

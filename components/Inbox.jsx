@@ -14,7 +14,7 @@ export default function Inbox() {
 
     const {address} = useAccount()
 
-    const { data } = useContractRead({
+    const { data=[] } = useContractRead({
         address: reportManageAddr,
         abi: reportMangeABI,
         functionName: "getRecToReport",
