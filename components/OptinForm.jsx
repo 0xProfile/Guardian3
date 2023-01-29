@@ -1,29 +1,29 @@
 import React, { useEffect } from "react"
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import { usePrepareContractWrite, useAccount, useContractWrite, useSigner } from "wagmi";
-import { reporterAddr } from "../constants";
+import Avatar from "@mui/material/Avatar"
+import Button from "@mui/material/Button"
+import TextField from "@mui/material/TextField"
+import FormControl from "@mui/material/FormControl"
+import InputLabel from "@mui/material/InputLabel"
+import Select from "@mui/material/Select"
+import MenuItem from "@mui/material/MenuItem"
+import Paper from "@mui/material/Paper"
+import Box from "@mui/material/Box"
+import Grid from "@mui/material/Grid"
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined"
+import Typography from "@mui/material/Typography"
+import { usePrepareContractWrite, useAccount, useContractWrite, useSigner, useWaitForTransaction} from "wagmi"
+import { reporterAddr } from "../constants"
 import reporterABI from "../constants/abis/reporter.json"
+import { Modal, CircularProgress } from "@mui/material"
 
 export default function SignInSide() {
-
     const { address } = useAccount()
     const [org, setOrg] = React.useState("")
     const [email, setEmail] = React.useState("")
     const [name, setName] = React.useState("")
     const [publicKey, setPublicKey] = React.useState("")
     const [id, setId] = React.useState(0)
-    const { data: signer } = useSigner();
+    const { data: signer } = useSigner()
 
     useEffect(() => {
         if (!signer) return
@@ -32,16 +32,17 @@ export default function SignInSide() {
         })
     }, [signer])
 
-    const {config} = usePrepareContractWrite({
+    const { config } = usePrepareContractWrite({
         address: reporterAddr,
         abi: reporterABI,
         functionName: "add",
         args: [address, name, email, org, publicKey, id],
     })
 
-    const { write: addReporter } = useContractWrite(config)
+    const { write: addReporter, data } = useContractWrite(config)
 
     const handleSubmit = (event) => {
+        setShowProgress(true)
         event.preventDefault()
         addReporter?.()
     }
@@ -49,6 +50,22 @@ export default function SignInSide() {
     const handleChange = (event) => {
         setOrg(event.target.value)
     }
+
+    const [showProgress, setShowProgress] = React.useState(false)
+
+    const waitForTransaction = useWaitForTransaction({
+        hash: data?.hash,
+    })
+
+    useEffect(() => {
+        console.log(data)
+        console.log(waitForTransaction)
+        if (waitForTransaction?.status === "success") {
+            console.log("Success")
+            setShowProgress(false)
+        }
+    }, [waitForTransaction])
+
 
     return (
         <Grid
@@ -61,6 +78,26 @@ export default function SignInSide() {
                 alignItems: "center",
             }}
         >
+            <Modal open={showProgress}>
+                <Box
+                    sx={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        width: 400,
+                        bgcolor: "background.paper",
+                        border: "2px solid #000",
+                        boxShadow: 24,
+                        p: 4,
+                    }}
+                >
+                    <Typography variant="h6" component="div" gutterBottom>
+                        Uploading...
+                    </Typography>
+                    <CircularProgress />
+                </Box>
+            </Modal>
             <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
                 <Box
                     sx={{
@@ -122,9 +159,6 @@ export default function SignInSide() {
                     </Box>
                 </Box>
             </Grid>
-            {/* <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-                <h1>Already opt-in? Connect Wallet Now!</h1>
-            </Grid> */}
         </Grid>
     )
 }
