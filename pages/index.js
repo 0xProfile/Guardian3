@@ -1,8 +1,7 @@
 import "@rainbow-me/rainbowkit/styles.css"
 import { useRouter } from "next/router"
-import Head from "next/head"
-import styles from "../styles/Home.module.css"
-import { Button } from "@mui/material"
+import { Button, Card, CardActionArea, CardContent, Grid, Typography } from "@mui/material"
+import Image from "next/image"
 
 export default function Home() {
     const router = useRouter()
@@ -12,30 +11,45 @@ export default function Home() {
     }
 
     return (
-        <div className={styles.main}>
-            <Head>
-                <title>FCloud</title>
-                <link rel="icon" href="/favicon.ico" />
-            </Head>
+        <Grid container spacing={2} justifyContent="space-around">
+            <Grid item xs={5}>
+                <Card>
+                    <CardActionArea
+                        onClick={() => handleClick("journalist")}
+                    >
+                        <CardContent sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center"
+                        }}>
+                            <Image src="/assets/reporter.png" alt="journalist" width={100} height={100} />
+                            <Typography variant="h5" component="div">
+                                Journalist Entry
+                            </Typography>
 
-            <div className={styles.circle}>
-                <div className={styles.circletitle}>title</div>
-                <div className={styles.circlesubtitle}>Description</div>
-                <Button
-                    variant="contained"
-                    href="#contained-buttons"
-                    onClick={() => handleClick("whistleblower")}
-                >
-                    This is whistleblower link
-                </Button>
-                <Button
-                    variant="contained"
-                    href="#contained-buttons"
-                    onClick={() => handleClick("journalist")}
-                >
-                    This is journalist link
-                </Button>
-            </div>
-        </div>
+                        </CardContent>
+                    </CardActionArea>
+                </Card>
+            </Grid>
+
+            <Grid item xs={5}>
+                <Card>
+                    <CardActionArea
+                        onClick={() => handleClick("whistleblower")}
+                    >
+                        <CardContent sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center"
+                        }}>
+                            <Image src="/assets/blower.png" alt="whistleblower" width={100} height={100} />
+                            <Typography variant="h5" component="div">
+                                Whistleblower Entry
+                            </Typography>
+                        </CardContent>
+                    </CardActionArea>
+                </Card>
+            </Grid>
+        </Grid>
     )
 }

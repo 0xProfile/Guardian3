@@ -1,10 +1,10 @@
-import { Button, Grid, Step, StepLabel, Stepper, Typography, Card, CardContent, CircularProgressWithLabel, CircularProgress } from "@mui/material";
+import { Button, Grid, Step, StepLabel, Stepper, Typography, Card, CardContent, CircularProgressWithLabel, CircularProgress, Modal } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useEffect } from "react";
+import React, { use, useEffect } from "react";
 import SelectReport from "./selectReport";
 import SelectFile from "./selectFile";
 import SendReport from "./sendReport";
-import { useAccount, usePrepareContractWrite, useSigner,useContractWrite, useContractEvent } from "wagmi";
+import { useAccount, usePrepareContractWrite, useSigner,useContractWrite, useContractEvent, useWaitForTransaction } from "wagmi";
 import lighthouse from '@lighthouse-web3/sdk';
 import { reportManageAddr } from '../../../constants';
 import reportMangeABI from '../../../constants/abis/reportManage.json'
@@ -83,10 +83,22 @@ export default function index() {
             cid,
             sig.signedMessage
         );
-        setShowProgress(false);
+        // setShowProgress(false);
     }
 
-    const { write: addReport } = useContractWrite(config)
+    const { write: addReport, data } = useContractWrite(config)
+
+    const waitForTransaction = useWaitForTransaction({
+        hash: data?.hash,
+    })
+
+    useEffect(() => {
+        if (waitForTransaction?.status === "success") {
+            console.log("Success");
+            setShowProgress(false);
+        }
+    }, [waitForTransaction])
+
     useEffect(() => {
         if (cid !== "Default CID" && title !== "Default Title" && addReport && !called) {
             addReport();
@@ -104,13 +116,24 @@ export default function index() {
 
     return (
         <Grid container spacing={2} alignItems={"center"} justifyContent={"center"}>
-            {
-                showProgress && <CircularProgress sx={{
+            <Modal open={showProgress}>
+                <Box sx={{
                     position: 'absolute',
                     top: '50%',
                     left: '50%',
-                }} variant="determinate" value={progressValue} />
-            }
+                    transform: 'translate(-50%, -50%)',
+                    width: 400,
+                    bgcolor: 'background.paper',
+                    border: '2px solid #000',
+                    boxShadow: 24,
+                    p: 4,
+                }}>
+                    <Typography variant="h6" component="div" gutterBottom>
+                        Uploading...
+                    </Typography>
+                    <CircularProgress  />
+                </Box>
+            </Modal>
             <Grid item xs={10}>
                 <Stepper activeStep={activeStep}>
                     {

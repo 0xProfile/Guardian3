@@ -1,3 +1,4 @@
+import { Button } from '@mui/material';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 export const Connect = () => {
   return (
@@ -34,21 +35,21 @@ export const Connect = () => {
             {(() => {
               if (!connected) {
                 return (
-                  <button onClick={openConnectModal} type="button">
+                  <Button onClick={openConnectModal} type="button">
                     Connect Wallet
-                  </button>
+                  </Button>
                 );
               }
               if (chain.unsupported) {
                 return (
-                  <button onClick={openChainModal} type="button">
+                  <Button onClick={openChainModal} type="button">
                     Wrong network
-                  </button>
+                  </Button>
                 );
               }
               return (
                 <div style={{ display: 'inline', gap: 12 }}>
-                  <button
+                  <Button
                     onClick={openChainModal}
                     style={{ display: 'inline', alignItems: 'center' }}
                     type="button"
@@ -74,13 +75,13 @@ export const Connect = () => {
                       </div>
                     )}
                     {chain.name}
-                  </button>
-                  <button onClick={openAccountModal} type="button">
+                  </Button>
+                  <Button onClick={openAccountModal} type="button">
                     {account.displayName}
                     {account.displayBalance
                       ? ` (${account.displayBalance})`
                       : ''}
-                  </button>
+                  </Button>
                 </div>
               );
             })()}
