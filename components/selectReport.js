@@ -13,8 +13,8 @@ import {
 } from "@mui/material"
 import React, { useEffect } from "react"
 import { useContractRead, useSigner } from "wagmi"
-import reporterABI from "../constants/reporterABI"
-import { reporterAddr } from "../constants/contractAddr"
+import reporterABI from "../constants/abis/reporter.json"
+import { reporterAddr } from "../constants"
 
 export default function selectReport({ checked, setChecked }) {
     const [reporters, setReporters] = React.useState([])
