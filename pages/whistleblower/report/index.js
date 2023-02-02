@@ -1,9 +1,9 @@
 import { Button, Grid, Step, StepLabel, Stepper, Typography, Card, CardContent, CircularProgressWithLabel, CircularProgress, Modal } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { use, useEffect } from "react";
-import SelectReport from "./selectReport";
-import SelectFile from "./selectFile";
-import SendReport from "./sendReport";
+import SelectReport from "../../../components/selectReport";
+import SelectFile from "../../../components/selectFile";
+import SendReport from "../../../components/sendReport";
 import { useAccount, usePrepareContractWrite, useSigner,useContractWrite, useContractEvent, useWaitForTransaction } from "wagmi";
 import lighthouse from '@lighthouse-web3/sdk';
 import { reportManageAddr } from '../../../constants';
