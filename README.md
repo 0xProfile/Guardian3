@@ -17,6 +17,8 @@ Guardian3 is dedicated to making the world a better place by enabling whistleblo
 
 - Document storage: Our service utilizes the LightHouse SDK to store documents, allowing for the establishment of a 1-of-2 multi-sig between the source and the target journalist's public address.
 
+- Transparency: In our service, encrypted documents and communications are stored on-chain permanently and cannot be altered. Whistleblowers can trust the validity of any further investigative reporting by journalists, as the authenticity of the information can be verified through cryptography technology. This ensures the elimination of the risk of false reports and other unwanted outcomes.
+
 # How it Works
 Sources (whistleblowers) can communicate with journalists through two simple steps:
 
